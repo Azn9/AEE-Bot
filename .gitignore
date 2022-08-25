@@ -6,3 +6,4 @@ build
 configuration.json
 gradlew
 gradlew.bat
+src/test
