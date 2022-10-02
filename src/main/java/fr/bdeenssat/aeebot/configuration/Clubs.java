@@ -8,7 +8,9 @@ import java.util.List;
 
 public enum Clubs {
 
+    CHEERLEADING("Cheerleading", 1020351105047212032L),
     CONVI("Convivialité", 1011662597239611492L),
+    CYBER("Cyber", 1020305147252981771L),
     ENSSALTIMBANQUE("Enssaltimbanque", 1011662770904764478L),
     ENSSAT_ET_MAT("ENSSAT et mat", 1011662943584264192L),
     ENSSAT_MOTORSPORT("Enssat Motorsport", 1011663103857004687L),
@@ -21,15 +23,16 @@ public enum Clubs {
     GAMING("Gaming", 1011666816617164830L),
     //GEOCACHING("Géocaching", 1011666911274217543L), // Club arrêté
     HOLOGRAPHIE("Holographie", 1011667028249153576L),
-    IA("IA", 1011667101070659654L),
+    //IA("IA", 1011667101070659654L), // Club arrêté
     //INTERNATIONAL("International", 1011667316406222848L), // Club arrêté
     JAPANIM("Japanim", 1011667491187069068L),
-    JDC("Jeux de cartes", 1011667576536957018L),
+    //JDC("Jeux de cartes", 1011667576536957018L), // Ancien jeu de cartes, merge avec Magic
+    JDC("Jeux de cartes", 1011672144964497478L),
     JDP("Jeux de plateaux", 1011667687673442385L),
     JDR("Jeux de rôles", 1011667751263285358L),
     //KFET("KFET", 1011667876219998339L), // Club arrêté
-    L_ENSSAT_A_LES_BOULES("L'Enssat a les boules", 1011668318559674473L),
-    MAGIC("Magic", 1011672144964497478L),
+    //L_ENSSAT_A_LES_BOULES("L'Enssat a les boules", 1011668318559674473L), // Club arrêté
+    //MAGIC("Magic", 1011672144964497478L), // Merge avec JDC
     MUSIQUE("Musique", 1011672186119012393L),
     PHOTO("Photo", 1011672239948697711L),
     POKER("Poker", 1011672282449575966L),
