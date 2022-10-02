@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.LoggerConfig;
+import reactor.tools.agent.ReactorDebugAgent;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +20,8 @@ public class Bot {
 
     public static void main(String[] args) {
         Configuration configuration = Bot.loadConfiguration();
+
+        ReactorDebugAgent.init();
         Sentry.init(configuration.getSentryDsn());
 
         if (args.length == 1 && "debug".equalsIgnoreCase(args[0])) {

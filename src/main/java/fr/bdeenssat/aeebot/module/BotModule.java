@@ -21,8 +21,7 @@ public abstract class BotModule {
     public abstract void initialize();
 
     public <T extends Event> void registerListener(Class<T> eventClass, Function<T, Mono<?>> handler) {
-        this.gatewayDiscordClient.getEventDispatcher()
-                .on(eventClass)
+        this.gatewayDiscordClient.on(eventClass)
                 .flatMap(handler)
                 .onErrorResume(throwable -> ErrorManager.logError(throwable, this.getClass().getName()))
                 .subscribe();

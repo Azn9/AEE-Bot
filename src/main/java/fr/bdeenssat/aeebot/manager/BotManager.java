@@ -21,7 +21,6 @@ public class BotManager {
 
     private final List<Class<? extends BotModule>> botModules = new ArrayList<>();
     private final Configuration configuration;
-    private DiscordClient discordClient;
     private GatewayDiscordClient gatewayClient;
 
     public BotManager(Configuration configuration) {
@@ -40,9 +39,9 @@ public class BotManager {
     }
 
     public void start() {
-        this.discordClient = DiscordClient.create(this.configuration.getDiscordToken().trim());
+        DiscordClient discordClient = DiscordClient.create(this.configuration.getDiscordToken().trim());
 
-        this.gatewayClient = this.discordClient.gateway()
+        this.gatewayClient = discordClient.gateway()
                 .setEnabledIntents(IntentSet.all())
                 .login()
                 .block();
@@ -55,23 +54,26 @@ public class BotManager {
             try {
                 BotModule module = botModule.getDeclaredConstructor(GatewayDiscordClient.class, Configuration.class).newInstance(gatewayClient, this.configuration);
                 module.initialize();
-            } catch (Exception e) {
-                ErrorManager.logError(e, botModule.getName());
+            } catch (Exception exception) {
+                ErrorManager.logError(exception, botModule.getName());
             }
         }
 
         synchronized (this) {
             try {
                 this.wait();  // Wait indefinitely
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            } catch (InterruptedException ignored) {
             }
         }
     }
 
     public void shutdown() {
         if (this.gatewayClient != null) {
-            this.gatewayClient.logout().block();
+            try {
+                this.gatewayClient.logout().block();
+            } catch (Exception exception) {
+                ErrorManager.logError(exception, this.getClass().getName());
+            }
         }
 
         synchronized (BotManager.this) {
