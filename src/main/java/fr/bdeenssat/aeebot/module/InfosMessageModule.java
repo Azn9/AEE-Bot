@@ -6,6 +6,7 @@ import discord4j.core.object.entity.channel.MessageChannel;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
 import fr.bdeenssat.aeebot.configuration.Channels;
+import fr.bdeenssat.aeebot.configuration.Clubs;
 import fr.bdeenssat.aeebot.configuration.Configuration;
 import fr.bdeenssat.aeebot.configuration.Members;
 import fr.bdeenssat.aeebot.configuration.Roles;
@@ -65,13 +66,14 @@ public class InfosMessageModule extends BotModule {
                                         .title("Clubs de l'AEE")
                                         .description("""
                                                 Les clubs sont l'épicentre de la vie étudiante enssatienne. Ils permettent aux étudiants qui y participent de découvrir des activités diverses et renforcent la cohésion et l'intégration au sein des promotions.
-                                                Cette année l'AEE compte 20 clubs ! (Si vous souhaitez en créer un, n'hésitez pas à contacter <@%d>)
+                                                Cette année l'AEE compte %d clubs ! (Si vous souhaitez en créer un, n'hésitez pas à contacter <@%d>)
                                                                         
                                                 Découvrez tous les clubs de l'enssat grâce aux salons <#%d> !
                                                 Restez au courant des événements proposés par ces derniers dans le salon <#%d>.
                                                 Accédez aux salons de discussion des clubs en séléctionnant ceux dont vous êtes membre via le salon <#%d>.
                                                 """
                                                 .formatted(
+                                                        Clubs.values().length,
                                                         Members.RESPO_CLUBS.getMemberId(),
                                                         Channels.PRESENTATION_CLUBS.getChannelId(),
                                                         Channels.EVENTS_CLUBS.getChannelId(),
