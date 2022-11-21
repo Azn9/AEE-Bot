@@ -3,6 +3,7 @@ package fr.bdeenssat.aeebot.module;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import discord4j.core.object.component.ActionRow;
+import discord4j.core.object.component.LayoutComponent;
 import discord4j.core.object.component.SelectMenu;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
@@ -16,6 +17,10 @@ import fr.bdeenssat.aeebot.configuration.Configuration;
 import fr.bdeenssat.aeebot.manager.ErrorManager;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class ClubsRolesModule extends BotModule {
 
@@ -38,18 +43,38 @@ public class ClubsRolesModule extends BotModule {
                             return Mono.empty();
                         }
 
+                        List<LayoutComponent> actionRowList = new ArrayList<>();
+
+                        if (Clubs.values().length > 25) {
+                            int neededRows = (int) Math.ceil(Clubs.values().length / 25.0);
+
+                            for (int i = 0; i < neededRows; i++) {
+                                List<SelectMenu.Option> options = Stream.of(Clubs.values())
+                                        .skip(i * 25L)
+                                        .limit(25)
+                                        .map(Clubs::asOption)
+                                        .toList();
+
+                                SelectMenu selectMenu = SelectMenu.of("clubs-selectmenu-" + i, options).withMinValues(1).withMaxValues(options.size());
+
+                                actionRowList.add(ActionRow.of(selectMenu));
+                            }
+                        } else {
+                            actionRowList.add(ActionRow.of(
+                                    SelectMenu.of(
+                                            "clubs-selectmenu",
+                                            Clubs.asOptionList()
+                                    ).withMinValues(1).withMaxValues(Clubs.values().length).withPlaceholder("Sélectionnez le(s) club(s) dont vous faites partie")
+                            ));
+                        }
+
                         return messageChannel.createMessage(MessageCreateSpec.builder()
                                         .embeds(EmbedCreateSpec.builder()
                                                 .title("Sélectionnez le(s) club(s) dont vous faites partie")
                                                 .description("Sélectionnez à nouveau un club pour vous retirer son rôle en cas d'erreur")
                                                 .color(Color.MEDIUM_SEA_GREEN)
                                                 .build())
-                                        .components(ActionRow.of(
-                                                SelectMenu.of(
-                                                        "clubs-selectmenu",
-                                                        Clubs.asOptionList()
-                                                ).withMinValues(1).withMaxValues(Clubs.values().length).withPlaceholder("Sélectionnez le(s) club(s) dont vous faites partie")
-                                        ))
+                                        .components(actionRowList)
                                         .build())
                                 .flatMap(Message::pin);
                     });
@@ -59,7 +84,7 @@ public class ClubsRolesModule extends BotModule {
     }
 
     private Mono<?> handle(SelectMenuInteractionEvent event) {
-        if (!"clubs-selectmenu".equals(event.getCustomId())) {
+        if (!event.getCustomId().startsWith("clubs-selectmenu-")) {
             return Mono.empty();
         }
 
